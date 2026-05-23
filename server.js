@@ -14,12 +14,54 @@ app.use(cors({
 app.use(express.json());
 
 // Conexión a la base de datos de XAMPP
-const db = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '',
-    database: 'infoemp_db'
+// Cambiamos la configuración vieja por la URL de Railway en la nube
+const db = mysql.createConnection('mysql://root:FBlHOfBimkmuyqXlCFbamLsvWTBINTPC@kodama.proxy.rlwy.net:16648/railway');
+
+db.connect((err) => {
+    if (err) {
+        console.error('❌ Error conectando a la base de datos de Railway:', err.message);
+        return;
+    }
+    console.log('🚀 ¡Conectado con éxito a la base de datos de Railway en la nube!');
 });
+
+// Código para crear las tablas automáticamente si no existen en Railway
+const crearTablasDeFormaAutomatica = () => {
+    const tablaUsuarios = `
+        CREATE TABLE IF NOT EXISTS users (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            username VARCHAR(50) NOT NULL UNIQUE,
+            password VARCHAR(255) NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+    `;
+
+    const tablaEmpleados = `
+        CREATE TABLE IF NOT EXISTS employees (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            name VARCHAR(100) NOT NULL,
+            document VARCHAR(50) NOT NULL,
+            employeeNumber VARCHAR(50) NOT NULL,
+            celular VARCHAR(20),
+            lugarTrabajo VARCHAR(100),
+            telefonoEmpresa VARCHAR(20),
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+    `;
+
+    db.query(tablaUsuarios, (err) => {
+        if (err) console.error('Error creando tabla users en la nube:', err.message);
+        else console.log('✅ Tabla users verificada/creada en Railway');
+    });
+
+    db.query(tablaEmpleados, (err) => {
+        if (err) console.error('Error creando tabla employees en la nube:', err.message);
+        else console.log('✅ Tabla employees verificada/creada en Railway');
+    });
+};
+
+// Ejecutamos la función de chequeo
+crearTablasDeFormaAutomatica();
 
 db.connect((err) => {
     if (err) {

@@ -63,15 +63,27 @@ app.post('/api/login', (req, res) => {
 
 // Función intermedia para proteger las rutas con el Token
 const verificarToken = (req, res, next) => {
-    const authHeader = req.headers['authorization'];
+    // Captura la cabecera de autorización
+    const authHeader = req.headers['authorization'] || req.headers['Authorization'];
+    
+    // Separa la palabra 'Bearer' del token real
     const token = authHeader && authHeader.split(' ')[1];
 
-    if (!token) return res.status(401).json({ error: 'Acceso denegado, falta token' });
+    // Si no hay token, frena con un 401
+    if (!token) {
+        console.log("❌ Intento de acceso sin Token");
+        return res.status(401).json({ error: 'Acceso denegado, falta token' });
+    }
 
+    // Verifica que el token sea válido usando la misma palabra secreta
     jwt.verify(token, 'secreto_super_seguro', (err, user) => {
-        if (err) return res.status(403).json({ error: 'Token inválido o expirado' });
-        req.user = user;
-        next();
+        if (err) {
+            console.log("❌ Token inválido o expirado:", err.message);
+            return res.status(403).json({ error: 'Token inválido o expirado' });
+        }
+        
+        req.user = user; // Guarda el usuario en la solicitud
+        next(); // Permite pasar a la ruta (ej. /api/employees)
     });
 };
 

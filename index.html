@@ -201,24 +201,30 @@
             animation: slideDown 0.4s ease;
         }
 
+        .toolbar-buttons {
+            display: flex; gap: 8%;
+            justify-content: flex-start;
+        }
+
         .custom-alert.error { border-color: #ef4444; }
         @keyframes slideDown {
             from { opacity: 0; transform: translate(-50%, -30px); }
             to { opacity: 1; transform: translate(-50%, 0); }
         }
 
-        @media screen and (max-width: 480px) {
+/*IPHONE X Y XS*/
+                @media screen and (min-width: 375px) and (max-width: 428px) {
   .table-container {
-    font-size: 10px;  
+    font-size: 50%;  
   }
   div .header {
-    font-size: 10px;
+    font-size: 60%;
   }
-  div .toolbar button {
-    margin-left: 1px;
-    margin-right: 31px;
+  div .toolbar-buttons {
+   display: flex; gap: 12.5%;
   }
 }
+
     </style>
 </head>
 
@@ -262,7 +268,7 @@
 
         <div class="toolbar">
             <input type="text" id="search-input" placeholder="Buscar" class="search-box" onkeyup="searchTable()">
-            <div style="margin-left: auto; display: flex; gap: 10px;">
+            <div class="toolbar-buttons">
                 <button onclick="filterTable()" class="btn-small btn-filter">Filtrar</button>
                 <button onclick="showAddModal()" class="btn-small btn-add">Agregar</button>
                 <button onclick="deleteSelected()" class="btn-small btn-delete">Quitar</button>

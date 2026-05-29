@@ -16,7 +16,7 @@
 
         .auth-container {
             max-width: 420px;
-            margin: 120px auto;
+            margin: 80px auto;
             background: #2a2654;
             border: 3px solid #e11d48;
             border-radius: 16px;
@@ -87,29 +87,12 @@
             cursor: pointer;
         }
 
-        .btn-small.btn-add {
-            background-color: rgb(0, 95, 0);
-        }
-
-        .btn-small.btn-add:hover {
-            background-color: rgb(0, 128, 0);
-        }
-
-        .btn-small.btn-filter {
-            background-color: #929000;
-        }
-
-        .btn-small.btn-filter:hover {
-            background-color: #929000cc;
-        }
-
-        .btn-small.btn-delete {
-            background-color: #b91c1c;
-        }
-
-        .btn-small.btn-delete:hover {
-            background-color: #b91c1ccc;
-        }
+        .btn-small.btn-add { background-color: rgb(0, 95, 0); }
+        .btn-small.btn-add:hover { background-color: rgb(0, 128, 0); }
+        .btn-small.btn-filter { background-color: #929000; }
+        .btn-small.btn-filter:hover { background-color: #929000cc; }
+        .btn-small.btn-delete { background-color: #b91c1c; }
+        .btn-small.btn-delete:hover { background-color: #b91c1ccc; }
 
         .btn-exit {
             background-color: #b91c1c;
@@ -119,10 +102,7 @@
             color: white;
             cursor: pointer;
         }
-
-        .btn-exit:hover {
-            background-color: #b91c1ccc;
-        }
+        .btn-exit:hover { background-color: #b91c1ccc; }
 
         .table-container {
             background-color: #2a2654;
@@ -133,7 +113,6 @@
 
         table { width: 100%; border-collapse: collapse; }
         th { background-color: #f3f4f6; color: black; padding: 14px 20px; text-align: left; }
-        /* CORRECCIÓN VISUAL: Fondo oscuro coherente para celdas */
         td { padding: 14px 20px; border-bottom: 1px solid #4b5563; background-color: #2a2654; color: white; cursor: pointer; }
         tr:hover td { background-color: #374151; }
 
@@ -154,7 +133,6 @@
             border-radius: 8px;
         }
 
-        /* Vista Compartida - SOLO INFORMACIÓN */
         #share-page { 
             display: none; 
             min-height: 100vh; 
@@ -207,47 +185,20 @@
             to { opacity: 1; transform: translate(-50%, 0); }
         }
 
-/*IPHONE X Y XS*/
-                @media screen and (max-width: 768px){
-  .table-container {
-    font-size: 7px;  
-  }
-  div .header {
-    font-size: 60%;
-  }
-  .toolbar {
-   display: flex;
-   justify-content: center;
-  }
-}
-
-/*ORDENADOR*/
-@media screen and (min-width: 1080px) {
-    .toolbar {
-        display: flex;
-        justify-content: space-between;
-    }
-}
-
-/*TABLETS*/
-@media screen and (min-width: 800px) {
-    .toolbar {
-        display: flex;
-        justify-content: space-between;
-    }
-}
-
+        @media screen and (max-width: 768px){
+            .table-container { font-size: 11px; }
+            div .header { font-size: 60%; }
+            .toolbar { display: flex; justify-content: center; }
+        }
     </style>
 </head>
-
 <body>
 
-    <!-- LOGIN -->
     <div id="login-screen">
         <div class="auth-container">
             <h1 class="title">INICIAR SESIÓN</h1>
-            <div class="input-group"><label>USUARIO</label><input id="login-user" type="text" class="input-field"></div>
-            <div class="input-group"><label>CONTRASEÑA</label><input id="login-pass" type="password" class="input-field"></div>
+            <div class="input-group"><label>USUARIO</label><input id="login-user" type="text" class="input-field" autocomplete="username"></div>
+            <div class="input-group"><label>CONTRASEÑA</label><input id="login-pass" type="password" class="input-field" autocomplete="current-password"></div>
             <div style="text-align:left; margin:10px 0;">
                 <input type="checkbox" id="remember-me" style="margin-right:8px;">
                 <label for="remember-me">Recordar sesión</label>
@@ -257,29 +208,24 @@
         </div>
     </div>
 
-    <!-- REGISTRO -->
     <div id="register-screen" style="display:none;">
         <div class="auth-container">
-            <h1 class="title">REGISTRAR</h1>
-            <div class="input-group"><label>Nombre Completo</label><input id="reg-name" type="text" class="input-field"></div>
-            <div class="input-group"><label>Cargo</label><input id="reg-cargo" type="text" class="input-field"></div>
-            <div class="input-group"><label>Usuario</label><input id="reg-user" type="text" class="input-field"></div>
-            <div class="input-group"><label>Contraseña</label><input id="reg-pass" type="password" class="input-field"></div>
-            <div class="input-group"><label>Empresa</label><input id="reg-empresa" type="text" class="input-field"></div>
-            <button onclick="registerUser()" class="btn btn-primary">Registrar</button>
+            <h1 class="title">REGISTRAR CUENTA</h1>
+            <div class="input-group"><label>Usuario</label><input id="reg-user" type="text" class="input-field" autocomplete="username"></div>
+            <div class="input-group"><label>Contraseña</label><input id="reg-pass" type="password" class="input-field" autocomplete="new-password"></div>
+            <button onclick="registerUser()" class="btn btn-primary">Crear Cuenta</button>
             <button onclick="showLogin()" class="btn btn-secondary">Atrás</button>
         </div>
     </div>
 
-    <!-- PÁGINA PRINCIPAL -->
     <div id="main-page">
         <div class="header">
-            <h1 class="text-4xl font-bold">InfoEmp - <span id="current-user"></span></h1>
+            <h1 style="font-size: 1.5rem; font-weight: bold;">InfoEmp - <span id="current-user"></span></h1>
             <button onclick="logout()" class="btn-exit">Cerrar Sesión</button>
         </div>
 
         <div class="toolbar">
-            <input type="text" id="search-input" placeholder="Buscar" class="search-box" onkeyup="searchTable()">
+            <input type="text" id="search-input" placeholder="Buscar empleado..." class="search-box" onkeyup="searchTable()">
             <div class="toolbar-buttons">
                 <button onclick="filterTable()" class="btn-small btn-filter">Filtrar</button>
                 <button onclick="showAddModal()" class="btn-small btn-add">Agregar</button>
@@ -304,7 +250,6 @@
         </div>
     </div>
 
-    <!-- VISTA COMPARTIDA -->
     <div id="share-page">
         <div class="share-view">
             <div class="share-header">
@@ -317,56 +262,32 @@
         </div>
     </div>
 
-    <!-- MODAL -->
-  <div id="modal" class="modal" style="
-    display: none; /* Cambiar a flex/block cuando se abra */
-    position: fixed; 
-    inset: 0; 
-    background: rgba(0,0,0,0.5); 
-    align-items: center; 
-    justify-content: center; 
-    z-index: 1000;
-    padding: 20px; /* Margen para que no toque los bordes del celular */
-">
-    <div class="modal-content" style="
-        background: #1e293b; /* Tu color de fondo actual */
-        color: white;
-        border-radius: 8px;
-        width: 100%;
-        max-width: 500px;
-        max-height: 90vh; /* Ocupa máximo el 90% de la altura de la pantalla */
-        display: flex;
-        flex-direction: column; /* Organiza título, cuerpo y botones en fila vertical */
-        box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.5);
-    ">
-        <div style="padding:20px 25px; border-bottom:1px solid #4b5563; flex-shrink: 0;">
-            <h2 id="modal-title" style="font-size:1.5rem; font-weight:bold; margin:0;">Agregar Empleado</h2>
-        </div>
-        
-        <div style="
-            padding:25px; 
-            overflow-y: auto; /* <--- Esto activa el scroll vertical */
-            flex-grow: 1; /* Absorbe el espacio disponible */
-        ">
-            <div class="input-group"><label>Nombre Completo</label><input id="name-input" type="text" class="input-field"></div>
-            <div class="input-group"><label>No. Documento</label><input id="doc-input" type="text" class="input-field"></div>
-            <div class="input-group"><label>No. Empleado</label><input id="emp-input" type="text" class="input-field"></div>
-            <div class="input-group"><label>Celular</label><input id="cel-input" type="text" class="input-field"></div>
-            <div class="input-group"><label>Seguro Médico</label><input id="seguro-input" type="text" class="input-field"></div>
-            <div class="input-group"><label>Tipo de Sangre</label><input id="blood-type-input" type="text" class="input-field"></div>
-            <div class="input-group"><label>Lugar de Trabajo</label><input id="work-input" type="text" class="input-field"></div>
-            <div class="input-group"><label>Teléfono de la Empresa</label><input id="company-phone-input" type="text" class="input-field"></div>
-        </div>
-        
-        <div style="padding:15px 25px; border-top:1px solid #4b5563; display:flex; gap:10px; flex-wrap:wrap; flex-shrink: 0;">
-            <button onclick="closeModal()" style="flex:1;padding:12px;background:#64748b;border:none;border-radius:4px;color:white;cursor:pointer;">Cancelar</button>
-            <button onclick="saveEmployee()" style="flex:1;padding:12px;background:#1e40af;border:none;border-radius:4px;color:white;font-weight:500;cursor:pointer;">Guardar</button>
-            <button onclick="generateShareLink()" id="ver-btn" style="flex:1;padding:12px;background:#22c55e;border:none;border-radius:4px;color:black;font-weight:600; display:none;cursor:pointer;">🔗 Copiar Link</button>
+    <div id="modal" class="modal" style="padding: 20px;">
+        <div class="modal-content" style="max-height: 90vh; display: flex; flex-direction: column; box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.5);">
+            <div style="padding:20px 25px; border-bottom:1px solid #4b5563; flex-shrink: 0;">
+                <h2 id="modal-title" style="font-size:1.5rem; font-weight:bold; margin:0;">Agregar Empleado</h2>
+            </div>
+            
+            <div style="padding:25px; overflow-y: auto; flex-grow: 1;">
+                <div class="input-group"><label>Nombre Completo</label><input id="name-input" type="text" class="input-field"></div>
+                <div class="input-group"><label>No. Documento</label><input id="doc-input" type="text" class="input-field"></div>
+                <div class="input-group"><label>No. Empleado</label><input id="emp-input" type="text" class="input-field"></div>
+                <div class="input-group"><label>Celular</label><input id="cel-input" type="text" class="input-field"></div>
+                <div class="input-group"><label>Seguro Médico</label><input id="seguro-input" type="text" class="input-field"></div>
+                <div class="input-group"><label>Tipo de Sangre</label><input id="blood-type-input" type="text" class="input-field"></div>
+                <div class="input-group"><label>Lugar de Trabajo</label><input id="work-input" type="text" class="input-field"></div>
+                <div class="input-group"><label>Teléfono de la Empresa</label><input id="company-phone-input" type="text" class="input-field"></div>
+            </div>
+            
+            <div style="padding:15px 25px; border-top:1px solid #4b5563; display:flex; gap:10px; flex-wrap:wrap; flex-shrink: 0;">
+                <button onclick="closeModal()" style="flex:1;padding:12px;background:#64748b;border:none;border-radius:4px;color:white;cursor:pointer;">Cancelar</button>
+                <button onclick="saveEmployee()" style="flex:1;padding:12px;background:#1e40af;border:none;border-radius:4px;color:white;font-weight:500;cursor:pointer;">Guardar</button>
+                <button onclick="generateShareLink()" id="ver-btn" style="flex:1;padding:12px;background:#22c55e;border:none;border-radius:4px;color:black;font-weight:600; display:none;cursor:pointer;">🔗 Copiar Link</button>
+            </div>
         </div>
     </div>
-</div>
 
-<script>
+    <script>
         const API_URL = 'https://infoemp-production.up.railway.app/api';
         let token = localStorage.getItem('infoemp_token') || sessionStorage.getItem('infoemp_token');
         let employees = [];
@@ -391,34 +312,29 @@
         }
 
         async function registerUser() {
-            const nombre = document.getElementById('reg-name').value.trim();
-            const cargo = document.getElementById('reg-cargo').value.trim();
             const usuario = document.getElementById('reg-user').value.trim();
             const contrasena = document.getElementById('reg-pass').value.trim();
-            const empresa = document.getElementById('reg-empresa').value.trim();
 
-            if (!nombre || !usuario || !contrasena) {
-                return showCustomAlert("Nombre, Usuario y Contraseña son obligatorios", "error");
+            if (!usuario || !contrasena) {
+                return showCustomAlert("Usuario y Contraseña son obligatorios", "error");
             }
 
-            const res = await fetch(`${API_URL}/register`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ 
-                    nombre, 
-                    cargo, 
-                    username: usuario,    
-                    password: contrasena, 
-                    empresa 
-                })
-            });
-            const data = await res.json();
+            try {
+                const res = await fetch(`${API_URL}/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: usuario, password: contrasena })
+                });
+                const data = await res.json();
 
-            if (res.ok) {
-                showCustomAlert("✅ Usuario registrado correctamente");
-                showLogin();
-            } else {
-                showCustomAlert(data.error, "error");
+                if (res.ok) {
+                    showCustomAlert("✅ Usuario registrado correctamente. Ya puedes iniciar sesión.");
+                    showLogin();
+                } else {
+                    showCustomAlert(data.error || "Error al registrar", "error");
+                }
+            } catch (err) {
+                showCustomAlert("Error de conexión con el servidor", "error");
             }
         }
 
@@ -431,28 +347,29 @@
                 return showCustomAlert("Por favor, llena todos los campos", "error");
             }
 
-            const res = await fetch(`${API_URL}/login`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ 
-                    username: usuario,    
-                    password: contrasena  
-                })
-            });
-            const data = await res.json();
+            try {
+                const res = await fetch(`${API_URL}/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: usuario, password: contrasena })
+                });
+                const data = await res.json();
 
-            if (res.ok) {
-                token = data.token;
-                if (remember) {
-                    localStorage.setItem('infoemp_token', token);
-                    localStorage.setItem('infoemp_username', usuario); 
+                if (res.ok) {
+                    token = data.token;
+                    if (remember) {
+                        localStorage.setItem('infoemp_token', token);
+                        localStorage.setItem('infoemp_username', usuario); 
+                    } else {
+                        sessionStorage.setItem('infoemp_token', token);
+                        sessionStorage.setItem('infoemp_username', usuario); 
+                    }
+                    enterApp(usuario);
                 } else {
-                    sessionStorage.setItem('infoemp_token', token);
-                    sessionStorage.setItem('infoemp_username', usuario); 
+                    showCustomAlert(data.error || "Credenciales incorrectas", "error");
                 }
-                enterApp(usuario);
-            } else {
-                showCustomAlert(data.error, "error");
+            } catch (err) {
+                showCustomAlert("Error de conexión con el servidor", "error");
             }
         }
 
@@ -464,31 +381,34 @@
         }
 
         function logout() {
-            if (confirm("¿Cerrar sesión?")) {
-                localStorage.removeItem('infoemp_token');
-                localStorage.removeItem('infoemp_username');
-                sessionStorage.removeItem('infoemp_token');
-                sessionStorage.removeItem('infoemp_username');
-                token = null;
-                document.getElementById('main-page').style.display = 'none';
-                document.getElementById('login-screen').style.display = 'block';
-            }
+            localStorage.removeItem('infoemp_token');
+            localStorage.removeItem('infoemp_username');
+            sessionStorage.removeItem('infoemp_token');
+            sessionStorage.removeItem('infoemp_username');
+            token = null;
+            document.getElementById('main-page').style.display = 'none';
+            document.getElementById('login-screen').style.display = 'block';
         }
 
         async function loadEmployees() {
-            const res = await fetch(`${API_URL}/employees`, {
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
-            if (res.ok) {
-                employees = await res.json();
-                renderTable();
-            } else if (res.status === 401 || res.status === 403) {
-                logout();
+            try {
+                const res = await fetch(`${API_URL}/employees`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (res.ok) {
+                    employees = await res.json();
+                    renderTable();
+                } else if (res.status === 401 || res.status === 403) {
+                    logout();
+                }
+            } catch (err) {
+                showCustomAlert("Error al cargar empleados", "error");
             }
         }
 
         function renderTable(data = null) {
             const tbody = document.getElementById('employee-table');
+            if(!tbody) return;
             tbody.innerHTML = '';
             const toShow = data || employees;
             if (toShow.length === 0) {
@@ -500,7 +420,7 @@
                 tr.innerHTML = `
                     <td onclick="showDetail(${emp.id})">${emp.name}</td>
                     <td onclick="showDetail(${emp.id})">${emp.document}</td>
-                    <td onclick="showDetail(${emp.id})">${emp.employee_number || emp.employeeNumber}</td>
+                    <td onclick="showDetail(${emp.id})">${emp.employeeNumber || emp.employee_number}</td>
                     <td style="text-align:center;" onclick="event.stopImmediatePropagation()">
                         <input type="checkbox" data-id="${emp.id}" style="width:18px;height:18px;">
                     </td>
@@ -514,14 +434,14 @@
             if (!emp) return;
             editingId = id;
             document.getElementById('modal-title').textContent = "Editar Empleado";
-            document.getElementById('name-input').value = emp.name;
-            document.getElementById('doc-input').value = emp.document;
-            document.getElementById('emp-input').value = emp.employee_number || emp.employeeNumber;
+            document.getElementById('name-input').value = emp.name || '';
+            document.getElementById('doc-input').value = emp.document || '';
+            document.getElementById('emp-input').value = emp.employeeNumber || emp.employee_number || '';
             document.getElementById('cel-input').value = emp.celular || '';
-            document.getElementById('seguro-input').value = emp.seguro_medico || '';
-            document.getElementById('blood-type-input').value = emp.tipo_sangre || '';
-            document.getElementById('work-input').value = emp.lugar_trabajo || emp.lugarTrabajo || '';
-            document.getElementById('company-phone-input').value = emp.telefono_empresa || emp.telefonoEmpresa || '';
+            document.getElementById('seguro-input').value = emp.seguroMedico || emp.seguro_medico || '';
+            document.getElementById('blood-type-input').value = emp.tipoSangre || emp.tipo_sangre || '';
+            document.getElementById('work-input').value = emp.lugarTrabajo || emp.lugar_trabajo || '';
+            document.getElementById('company-phone-input').value = emp.telefonoEmpresa || emp.telefono_empresa || '';
             document.getElementById('ver-btn').style.display = 'block';
             document.getElementById('modal').style.display = 'flex';
         }
@@ -542,66 +462,55 @@
         }
 
         async function saveEmployee() {
-    const name = document.getElementById('name-input').value.trim();
-    const documentVal = document.getElementById('doc-input').value.trim();
-    const employeeNumber = document.getElementById('emp-input').value.trim();
-    const celular = document.getElementById('cel-input').value.trim();
-    const seguroMedico = document.getElementById('seguro-input').value.trim();
-    const tipoSangre = document.getElementById('blood-type-input').value.trim();
-    const lugarTrabajo = document.getElementById('work-input').value.trim();
-    const telefonoEmpresa = document.getElementById('company-phone-input').value.trim();
+            const name = document.getElementById('name-input').value.trim();
+            const documentVal = document.getElementById('doc-input').value.trim();
+            const employeeNumber = document.getElementById('emp-input').value.trim();
+            const celular = document.getElementById('cel-input').value.trim();
+            const seguroMedico = document.getElementById('seguro-input').value.trim();
+            const tipoSangre = document.getElementById('blood-type-input').value.trim();
+            const lugarTrabajo = document.getElementById('work-input').value.trim();
+            const telefonoEmpresa = document.getElementById('company-phone-input').value.trim();
 
-    if (!name || !documentVal || !employeeNumber) {
-        return showCustomAlert("Nombre, Documento y No. Empleado son obligatorios", "error");
-    }
+            if (!name || !documentVal || !employeeNumber) {
+                return showCustomAlert("Nombre, Documento y No. Empleado son obligatorios", "error");
+            }
 
-    // REGRESAMOS AL CAMELCASE QUE TU BACKEND ESPERA, PERO CORREGIDO:
-    const payload = { 
-        name, 
-        document: documentVal, 
-        employeeNumber, 
-        celular, 
-        seguroMedico,   // <-- Antes tenías 'seguro_Medico' (¡Este era el problema!)
-        tipoSangre,     // <-- camelCase limpio
-        lugarTrabajo, 
-        telefonoEmpresa 
-    };
-    
-    let res;
-    if (editingId) {
-        res = await fetch(`${API_URL}/employees/${editingId}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-            body: JSON.stringify(payload)
-        });
-    } else {
-        res = await fetch(`${API_URL}/employees`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-            body: JSON.stringify(payload)
-        });
-    }
+            const payload = { name, document: documentVal, employeeNumber, celular, seguroMedico, tipoSangre, lugarTrabajo, telefonoEmpresa };
+            
+            try {
+                let res;
+                if (editingId) {
+                    res = await fetch(`${API_URL}/employees/${editingId}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                        body: JSON.stringify(payload)
+                    });
+                } else {
+                    res = await fetch(`${API_URL}/employees`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                        body: JSON.stringify(payload)
+                    });
+                }
 
-    if (res.ok) {
-        loadEmployees();
-        closeModal();
-        showCustomAlert(editingId ? "✅ Actualizado correctamente" : "✅ Agregado correctamente");
-    } else {
-        showCustomAlert("Error al procesar la solicitud", "error");
-    }
-}
-
-
+                if (res.ok) {
+                    loadEmployees();
+                    closeModal();
+                    showCustomAlert(editingId ? "✅ Actualizado correctamente" : "✅ Agregado correctamente");
+                } else {
+                    showCustomAlert("Error al guardar los datos del empleado", "error");
+                }
+            } catch (err) {
+                showCustomAlert("Error de red con el servidor", "error");
+            }
+        }
 
         function generateShareLink() {
             if (!editingId) return;
-            
             const link = `${window.location.origin}${window.location.pathname}#view=${editingId}`;
-            
             navigator.clipboard.writeText(link).then(() => {
                 showCustomAlert("✅ Enlace seguro copiado al portapapeles");
             }).catch(err => {
-                console.error("Error al copiar el enlace: ", err);
                 alert(`Copia este enlace manualmente:\n${link}`);
             });
         }
@@ -616,18 +525,22 @@
             
             if (confirm(`¿Eliminar ${checked.length} empleado(s)?`)) {
                 const ids = Array.from(checked).map(cb => Number(cb.dataset.id));
-                const res = await fetch(`${API_URL}/employees/delete-multiple`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                    body: JSON.stringify({ ids })
-                });
+                try {
+                    const res = await fetch(`${API_URL}/employees/delete-multiple`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                        body: JSON.stringify({ ids })
+                    });
 
-                if (res.ok) {
-                    loadEmployees();
-                    document.getElementById('select-all').checked = false;
-                    showCustomAlert("🗑️ Empleados eliminados");
-                } else {
-                    showCustomAlert("Error al eliminar", "error");
+                    if (res.ok) {
+                        loadEmployees();
+                        document.getElementById('select-all').checked = false;
+                        showCustomAlert("🗑️ Empleados eliminados");
+                    } else {
+                        showCustomAlert("Error al eliminar", "error");
+                    }
+                } catch (err) {
+                    showCustomAlert("Error de conexión", "error");
                 }
             }
         }
@@ -641,9 +554,9 @@
             const term = document.getElementById('search-input').value.toLowerCase().trim();
             if (!term) return renderTable();
             const filtered = employees.filter(emp => 
-                emp.name.toLowerCase().includes(term) || 
-                emp.document.toLowerCase().includes(term) ||
-                (emp.employee_number || emp.employeeNumber).toLowerCase().includes(term)
+                (emp.name || '').toLowerCase().includes(term) || 
+                (emp.document || '').toLowerCase().includes(term) ||
+                (emp.employeeNumber || emp.employee_number || '').toLowerCase().includes(term)
             );
             renderTable(filtered);
         }
@@ -657,10 +570,8 @@
             window.location.reload();
         }
 
-        // ==================== FLUJO DE ARRANQUE SEGURO ====================
         window.onload = async () => {
             const hash = window.location.hash;
-            
             token = localStorage.getItem('infoemp_token') || sessionStorage.getItem('infoemp_token');
             
             if (hash.includes('#view=')) {
@@ -675,14 +586,14 @@
                     document.getElementById('share-page').style.display = 'flex';
                     
                     document.getElementById('share-body').innerHTML = `
-                        <p><strong>NOMBRE:</strong> ${employee.name}</p>
-                        <p><strong>NO. DE DOCUMENTO:</strong> ${employee.document}</p>
-                        <p><strong>NO. DE EMPLEADO:</strong> ${employee.employee_number}</p>
-                        <p><strong>CELULAR:</strong> ${employee.celular}</p>
-                        <p><strong>SEGURO MÉDICO:</strong> ${employee.seguro_medico}</p>
-                        <p><strong>TIPO DE SANGRE:</strong> ${employee.tipo_sangre}</p>
-                        <p><strong>LUGAR DE TRABAJO:</strong> ${employee.lugar_trabajo}</p>
-                        <p><strong>TELÉFONO DE LA EMPRESA:</strong> ${employee.telefono_empresa}</p>
+                        <p><strong>NOMBRE:</strong> ${employee.name || ''}</p>
+                        <p><strong>NO. DE DOCUMENTO:</strong> ${employee.document || ''}</p>
+                        <p><strong>NO. DE EMPLEADO:</strong> ${employee.employeeNumber || employee.employee_number || ''}</p>
+                        <p><strong>CELULAR:</strong> ${employee.celular || ''}</p>
+                        <p><strong>SEGURO MÉDICO:</strong> ${employee.seguroMedico || employee.seguro_medico || ''}</p>
+                        <p><strong>TIPO DE SANGRE:</strong> ${employee.tipoSangre || employee.tipo_sangre || ''}</p>
+                        <p><strong>LUGAR DE TRABAJO:</strong> ${employee.lugarTrabajo || employee.lugar_trabajo || ''}</p>
+                        <p><strong>TELÉFONO DE LA EMPRESA:</strong> ${employee.telefonoEmpresa || employee.telefono_empresa || ''}</p>
                     `;
                 } catch {
                     showCustomAlert("El enlace no existe o expiró", "error");
@@ -697,7 +608,6 @@
                 }
             }
         };
-</script>
-
+    </script>
 </body>
 </html>

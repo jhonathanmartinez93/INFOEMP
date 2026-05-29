@@ -185,10 +185,75 @@
             to { opacity: 1; transform: translate(-50%, 0); }
         }
 
-        @media screen and (max-width: 768px){
-            .table-container { font-size: 11px; }
-            div .header { font-size: 60%; }
-            .toolbar { display: flex; justify-content: center; }
+        /* BARRA DE HERRAMIENTAS - DISEÑO BASE PARA MÓVILES (MOBILE-FIRST) */
+.toolbar {
+    background-color: #2a2654;
+    padding: 15px;
+    display: flex;
+    flex-direction: column; /* En celulares, el buscador va arriba y los botones abajo */
+    gap: 12px;
+    align-items: stretch;
+    border-bottom: 3px solid #e11d48;
+}
+
+.search-box {
+    background-color: #d1d5db;
+    color: black;
+    border: none;
+    padding: 12px 15px;
+    border-radius: 6px;
+    width: 100%; /* Ocupa todo el ancho disponible */
+    font-size: 16px; /* Evita que iOS haga zoom automático molesto al hacer foco */
+}
+
+.toolbar-buttons {
+    display: flex;
+    justify-content: space-between; /* Distribuye los botones equitativamente */
+    gap: 8px;
+    width: 100%;
+}
+
+.toolbar-buttons .btn-small {
+    flex: 1; /* Hace que todos los botones tengan exactamente el mismo tamaño en móvil */
+    padding: 12px 8px;
+    font-size: 14px;
+    text-align: center;
+}
+
+/* =========================================================================
+   MEDIA QUERIES - AJUSTES PARA PANTALLAS GRANDES (TABLETS Y COMPUTADORAS)
+   ========================================================================= */
+@media screen and (min-width: 600px) {
+    .toolbar {
+        flex-direction: row; /* Vuelve a ponerse en fila en pantallas grandes */
+        justify-content: space-between;
+        padding: 15px 30px;
+    }
+
+    .search-box {
+        max-width: 350px; /* Ya no ocupa toda la pantalla en PC */
+    }
+
+    .toolbar-buttons {
+        width: auto; /* Los botones recuperan su tamaño normal */
+        justify-content: flex-end;
+        gap: 12px;
+    }
+
+    .toolbar-buttons .btn-small {
+        flex: none; /* Desactiva el estiramiento forzado */
+        padding: 10px 22px;
+    }
+}
+
+
+        @media screen and (max-width: 1280px) {
+            .table-container { font-size: 8px; }
+            .share-view { width: 95%; }
+            .toolbar { 
+                display: flex; 
+                justify-content: space-between;
+            }
         }
     </style>
 </head>

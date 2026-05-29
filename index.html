@@ -209,9 +209,9 @@
 
 /*IPHONE X Y XS*/
                 @media screen and (max-width: 768px){
-  .table-container {
+  /*.table-container {
     font-size: 7px;  
-  }
+  }*/
   div .header {
     font-size: 60%;
   }
@@ -328,6 +328,8 @@
                 <div class="input-group"><label>No. Documento</label><input id="doc-input" type="text" class="input-field"></div>
                 <div class="input-group"><label>No. Empleado</label><input id="emp-input" type="text" class="input-field"></div>
                 <div class="input-group"><label>Celular</label><input id="cel-input" type="text" class="input-field"></div>
+                <div class="input-group"><label>Seguro Médico</label><input id="seguro-input" type="text" class="input-field"></div>
+                <div class="input-group"><label>Tipo de Sangre</label><input id="blood-type-input" type="text" class="input-field"></div>
                 <div class="input-group"><label>Lugar de Trabajo</label><input id="work-input" type="text" class="input-field"></div>
                 <div class="input-group"><label>Teléfono de la Empresa</label><input id="company-phone-input" type="text" class="input-field"></div>
             </div>
@@ -339,7 +341,7 @@
         </div>
     </div>
 
-    <script>
+<script>
         const API_URL = 'https://infoemp-production.up.railway.app/api';
         let token = localStorage.getItem('infoemp_token') || sessionStorage.getItem('infoemp_token');
         let employees = [];
@@ -364,72 +366,70 @@
         }
 
         async function registerUser() {
-    const nombre = document.getElementById('reg-name').value.trim();
-    const cargo = document.getElementById('reg-cargo').value.trim();
-    const usuario = document.getElementById('reg-user').value.trim();
-    const contrasena = document.getElementById('reg-pass').value.trim();
-    const empresa = document.getElementById('reg-empresa').value.trim();
+            const nombre = document.getElementById('reg-name').value.trim();
+            const cargo = document.getElementById('reg-cargo').value.trim();
+            const usuario = document.getElementById('reg-user').value.trim();
+            const contrasena = document.getElementById('reg-pass').value.trim();
+            const empresa = document.getElementById('reg-empresa').value.trim();
 
-    if (!nombre || !usuario || !contrasena) {
-        return showCustomAlert("Nombre, Usuario y Contraseña son obligatorios", "error");
-    }
+            if (!nombre || !usuario || !contrasena) {
+                return showCustomAlert("Nombre, Usuario y Contraseña son obligatorios", "error");
+            }
 
-    const res = await fetch(`${API_URL}/register`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        // AQUÍ ESTÁ EL CAMBIO: Mapeamos tus variables a lo que el servidor espera recibir
-        body: JSON.stringify({ 
-            nombre, 
-            cargo, 
-            username: usuario,    // <-- 'usuario' viaja bautizado como 'username'
-            password: contrasena, // <-- 'contrasena' viaja bautizado como 'password'
-            empresa 
-        })
-    });
-    const data = await res.json();
+            const res = await fetch(`${API_URL}/register`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    nombre, 
+                    cargo, 
+                    username: usuario,    
+                    password: contrasena, 
+                    empresa 
+                })
+            });
+            const data = await res.json();
 
-    if (res.ok) {
-        showCustomAlert("✅ Usuario registrado correctamente");
-        showLogin();
-    } else {
-        showCustomAlert(data.error, "error");
-    }
-}
-
-async function login() {
-    const usuario = document.getElementById('login-user').value.trim();
-    const contrasena = document.getElementById('login-pass').value.trim();
-    const remember = document.getElementById('remember-me').checked;
-
-    if (!usuario || !contrasena) {
-        return showCustomAlert("Por favor, llena todos los campos", "error");
-    }
-
-    const res = await fetch(`${API_URL}/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        // AQUÍ EL CAMBIO: Traducimos para el servidor
-        body: JSON.stringify({ 
-            username: usuario,    // <-- Se envía como 'username'
-            password: contrasena  // <-- Se envía como 'password'
-        })
-    });
-    const data = await res.json();
-
-    if (res.ok) {
-        token = data.token;
-        if (remember) {
-            localStorage.setItem('infoemp_token', token);
-            localStorage.setItem('infoemp_username', usuario); // Usamos 'usuario' directamente
-        } else {
-            sessionStorage.setItem('infoemp_token', token);
-            sessionStorage.setItem('infoemp_username', usuario); // Usamos 'usuario' directamente
+            if (res.ok) {
+                showCustomAlert("✅ Usuario registrado correctamente");
+                showLogin();
+            } else {
+                showCustomAlert(data.error, "error");
+            }
         }
-        enterApp(usuario);
-    } else {
-        showCustomAlert(data.error, "error");
-    }
-}
+
+        async function login() {
+            const usuario = document.getElementById('login-user').value.trim();
+            const contrasena = document.getElementById('login-pass').value.trim();
+            const remember = document.getElementById('remember-me').checked;
+
+            if (!usuario || !contrasena) {
+                return showCustomAlert("Por favor, llena todos los campos", "error");
+            }
+
+            const res = await fetch(`${API_URL}/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    username: usuario,    
+                    password: contrasena  
+                })
+            });
+            const data = await res.json();
+
+            if (res.ok) {
+                token = data.token;
+                if (remember) {
+                    localStorage.setItem('infoemp_token', token);
+                    localStorage.setItem('infoemp_username', usuario); 
+                } else {
+                    sessionStorage.setItem('infoemp_token', token);
+                    sessionStorage.setItem('infoemp_username', usuario); 
+                }
+                enterApp(usuario);
+            } else {
+                showCustomAlert(data.error, "error");
+            }
+        }
 
         function enterApp(username) {
             document.getElementById('login-screen').style.display = 'none';
@@ -493,6 +493,8 @@ async function login() {
             document.getElementById('doc-input').value = emp.document;
             document.getElementById('emp-input').value = emp.employee_number || emp.employeeNumber;
             document.getElementById('cel-input').value = emp.celular || '';
+            document.getElementById('seguro-input').value = emp.seguro_medico || '';
+            document.getElementById('blood-type-input').value = emp.tipo_sangre || '';
             document.getElementById('work-input').value = emp.lugar_trabajo || emp.lugarTrabajo || '';
             document.getElementById('company-phone-input').value = emp.telefono_empresa || emp.telefonoEmpresa || '';
             document.getElementById('ver-btn').style.display = 'block';
@@ -506,6 +508,8 @@ async function login() {
             document.getElementById('doc-input').value = '';
             document.getElementById('emp-input').value = '';
             document.getElementById('cel-input').value = '';
+            document.getElementById('seguro-input').value = '';
+            document.getElementById('blood-type-input').value = '';
             document.getElementById('work-input').value = '';
             document.getElementById('company-phone-input').value = '';
             document.getElementById('ver-btn').style.display = 'none';
@@ -513,55 +517,69 @@ async function login() {
         }
 
         async function saveEmployee() {
-            const name = document.getElementById('name-input').value.trim();
-            const documentVal = document.getElementById('doc-input').value.trim();
-            const employeeNumber = document.getElementById('emp-input').value.trim();
-            const celular = document.getElementById('cel-input').value.trim();
-            const lugarTrabajo = document.getElementById('work-input').value.trim();
-            const telefonoEmpresa = document.getElementById('company-phone-input').value.trim();
+    const name = document.getElementById('name-input').value.trim();
+    const documentVal = document.getElementById('doc-input').value.trim();
+    const employeeNumber = document.getElementById('emp-input').value.trim();
+    const celular = document.getElementById('cel-input').value.trim();
+    const seguroMedico = document.getElementById('seguro-input').value.trim();
+    const tipoSangre = document.getElementById('blood-type-input').value.trim();
+    const lugarTrabajo = document.getElementById('work-input').value.trim();
+    const telefonoEmpresa = document.getElementById('company-phone-input').value.trim();
 
-            if (!name || !documentVal || !employeeNumber) return showCustomAlert("Nombre, Documento y No. Empleado son obligatorios", "error");
+    if (!name || !documentVal || !employeeNumber) {
+        return showCustomAlert("Nombre, Documento y No. Empleado son obligatorios", "error");
+    }
 
-            const payload = { name, document: documentVal, employeeNumber, celular, seguroMedico, tipoSangre, lugarTrabajo, telefonoEmpresa };
-            
-            let res;
-            if (editingId) {
-                res = await fetch(`${API_URL}/employees/${editingId}`, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                    body: JSON.stringify(payload)
-                });
-            } else {
-                res = await fetch(`${API_URL}/employees`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                    body: JSON.stringify(payload)
-                });
-            }
-
-            if (res.ok) {
-                loadEmployees();
-                closeModal();
-                showCustomAlert(editingId ? "✅ Actualizado correctamente" : "✅ Agregado correctamente");
-            } else {
-                showCustomAlert("Error al procesar la solicitud", "error");
-            }
-        }
-
-function generateShareLink() {
-    if (!editingId) return;
+    // REGRESAMOS AL CAMELCASE QUE TU BACKEND ESPERA, PERO CORREGIDO:
+    const payload = { 
+        name, 
+        document: documentVal, 
+        employeeNumber, 
+        celular, 
+        seguroMedico,   // <-- Antes tenías 'seguro_Medico' (¡Este era el problema!)
+        tipoSangre,     // <-- camelCase limpio
+        lugarTrabajo, 
+        telefonoEmpresa 
+    };
     
-    // Genera el enlace apuntando al sistema de hash que ya tienes programado
-    const link = `${window.location.origin}${window.location.pathname}#view=${editingId}`;
-    
-    navigator.clipboard.writeText(link).then(() => {
-        showCustomAlert("✅ Enlace seguro copiado al portapapeles");
-    }).catch(err => {
-        console.error("Error al copiar el enlace: ", err);
-        // Alternativa por si el navegador bloquea el portapapeles automáticamente
-        alert(`Copia este enlace manualmente:\n${link}`);
-    });
+    let res;
+    if (editingId) {
+        res = await fetch(`${API_URL}/employees/${editingId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+            body: JSON.stringify(payload)
+        });
+    } else {
+        res = await fetch(`${API_URL}/employees`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+            body: JSON.stringify(payload)
+        });
+    }
+
+    if (res.ok) {
+        loadEmployees();
+        closeModal();
+        showCustomAlert(editingId ? "✅ Actualizado correctamente" : "✅ Agregado correctamente");
+    } else {
+        showCustomAlert("Error al procesar la solicitud", "error");
+    }
 }
+
+
+
+        function generateShareLink() {
+            if (!editingId) return;
+            
+            const link = `${window.location.origin}${window.location.pathname}#view=${editingId}`;
+            
+            navigator.clipboard.writeText(link).then(() => {
+                showCustomAlert("✅ Enlace seguro copiado al portapapeles");
+            }).catch(err => {
+                console.error("Error al copiar el enlace: ", err);
+                alert(`Copia este enlace manualmente:\n${link}`);
+            });
+        }
 
         function closeModal() {
             document.getElementById('modal').style.display = 'none';
@@ -618,10 +636,8 @@ function generateShareLink() {
         window.onload = async () => {
             const hash = window.location.hash;
             
-            // Forzamos a la aplicación a leer el token guardado apenas abre la página
             token = localStorage.getItem('infoemp_token') || sessionStorage.getItem('infoemp_token');
             
-            // Comprobación de Link Compartido Seguro
             if (hash.includes('#view=')) {
                 const id = hash.split('#view=')[1];
                 try {
@@ -638,6 +654,8 @@ function generateShareLink() {
                         <p><strong>NO. DE DOCUMENTO:</strong> ${employee.document}</p>
                         <p><strong>NO. DE EMPLEADO:</strong> ${employee.employee_number}</p>
                         <p><strong>CELULAR:</strong> ${employee.celular}</p>
+                        <p><strong>SEGURO MÉDICO:</strong> ${employee.seguro_medico}</p>
+                        <p><strong>TIPO DE SANGRE:</strong> ${employee.tipo_sangre}</p>
                         <p><strong>LUGAR DE TRABAJO:</strong> ${employee.lugar_trabajo}</p>
                         <p><strong>TELÉFONO DE LA EMPRESA:</strong> ${employee.telefono_empresa}</p>
                     `;
@@ -646,7 +664,6 @@ function generateShareLink() {
                     showLogin();
                 }
             } else {
-                // Comprobación de persistencia de sesión ("Recordar sesión") correcta
                 const savedUsername = localStorage.getItem('infoemp_username') || sessionStorage.getItem('infoemp_username');
                 if (token && savedUsername) {
                     enterApp(savedUsername);
@@ -655,6 +672,7 @@ function generateShareLink() {
                 }
             }
         };
-    </script>
+</script>
+
 </body>
 </html>

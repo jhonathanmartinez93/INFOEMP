@@ -1,20 +1,19 @@
 const express = require('express');
 const mysql = require('mysql2');
-const bcrypt = require('bcryptjs'); // Asegúrate de que tenga el 'js' al final
+const bcrypt = require('bcryptjs'); 
 const jwt = require('jsonwebtoken');
 const cors = require('cors');
 
 const app = express();
-// Reemplaza tu app.use(cors()) viejo por este bloque:
+
 app.use(cors({
-    origin: '*', // Permite que cualquier dispositivo se conecte
-    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Permite todos los métodos comunes
-    allowedHeaders: ['Content-Type', 'Authorization'] // ¡VITAL! Le da permiso al navegador de enviar el Token
+    origin: '*', 
+    methods: ['GET', 'POST', 'PUT', 'DELETE'], 
+    allowedHeaders: ['Content-Type', 'Authorization'] 
 }));
 app.use(express.json());
 
-// Conexión a la base de datos de XAMPP
-// Cambiamos la configuración vieja por la URL de Railway en la nube
+// Conexión a la base de datos de Railway en la nube
 const db = mysql.createConnection('mysql://root:FBlHOfBimkmuyqXlCFbamLsvWTBINTPC@kodama.proxy.rlwy.net:16648/railway');
 
 db.connect((err) => {
@@ -25,7 +24,7 @@ db.connect((err) => {
     console.log('🚀 ¡Conectado con éxito a la base de datos de Railway en la nube!');
 });
 
-// Código para crear las tablas automáticamente si no existen en Railway
+// Creación automática de tablas (Aseguramos la estructura correcta)
 const crearTablasDeFormaAutomatica = () => {
     const tablaUsuarios = `
         CREATE TABLE IF NOT EXISTS users (
@@ -43,6 +42,8 @@ const crearTablasDeFormaAutomatica = () => {
             document VARCHAR(50) NOT NULL,
             employeeNumber VARCHAR(50) NOT NULL,
             celular VARCHAR(20),
+            seguroMedico VARCHAR(100),
+            tipoSangre VARCHAR(20),
             lugarTrabajo VARCHAR(100),
             telefonoEmpresa VARCHAR(20),
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -55,21 +56,32 @@ const crearTablasDeFormaAutomatica = () => {
     });
 
     db.query(tablaEmpleados, (err) => {
-        if (err) console.error('Error creando tabla employees en la nube:', err.message);
-        else console.log('✅ Tabla employees verificada/creada en Railway');
+        if (err) {
+            console.error('Error creando tabla employees en la nube:', err.message);
+        } else {
+            console.log('✅ Tabla employees verificada/creada en Railway');
+            
+            // =========================================================================
+            // INYECTAR LAS COLUMNAS FALTANTES SI LA TABLA YA EXISTÍA
+            // =========================================================================
+            const agregarSeguro = `ALTER TABLE employees ADD COLUMN IF NOT EXISTS seguroMedico VARCHAR(100);`;
+            const agregarSangre = `ALTER TABLE employees ADD COLUMN IF NOT EXISTS tipoSangre VARCHAR(20);`;
+
+            db.query(agregarSeguro, (errAlter) => {
+                if (errAlter) console.error('⚠️ Nota al verificar columna seguroMedico:', errAlter.message);
+                else console.log('🔹 Columna seguroMedico verificada en la base de datos');
+            });
+
+            db.query(agregarSangre, (errAlter) => {
+                if (errAlter) console.error('⚠️ Nota al verificar columna tipoSangre:', errAlter.message);
+                else console.log('🔹 Columna tipoSangre verificada en la base de datos');
+            });
+            // =========================================================================
+        }
     });
 };
 
-// Ejecutamos la función de chequeo
 crearTablasDeFormaAutomatica();
-
-db.connect((err) => {
-    if (err) {
-        console.error('❌ Error conectando a la base de datos:', err);
-        return;
-    }
-    console.log('✅ Conectado a la base de datos SQL en XAMPP');
-});
 
 // Ruta para Registrarse
 app.post('/api/register', async (req, res) => {
@@ -107,57 +119,52 @@ app.post('/api/login', (req, res) => {
     });
 });
 
-
-// Función intermedia para proteger las rutas con el Token
+// Middleware de verificación de Token
 const verificarToken = (req, res, next) => {
-    // Captura la cabecera de autorización
     const authHeader = req.headers['authorization'] || req.headers['Authorization'];
-    
-    // Separa la palabra 'Bearer' del token real
     const token = authHeader && authHeader.split(' ')[1];
 
-    // Si no hay token, frena con un 401
     if (!token) {
-        console.log("❌ Intento de acceso sin Token");
         return res.status(401).json({ error: 'Acceso denegado, falta token' });
     }
 
-    // Verifica que el token sea válido usando la misma palabra secreta
     jwt.verify(token, 'secreto_super_seguro', (err, user) => {
         if (err) {
-            console.log("❌ Token inválido o expirado:", err.message);
             return res.status(403).json({ error: 'Token inválido o expirado' });
         }
-        
-        req.user = user; // Guarda el usuario en la solicitud
-        next(); // Permite pasar a la ruta (ej. /api/employees)
+        req.user = user; 
+        next(); 
     });
 };
 
-// 1. Ruta para AGREGAR Empleado (POST)
+// 1. Ruta para AGREGAR Empleado (POST) - ¡CORREGIDA!
 app.post('/api/employees', verificarToken, (req, res) => {
-    const { name, document, employeeNumber, celular, lugarTrabajo, telefonoEmpresa } = req.body;
+    // Añadidos seguroMedico y tipoSangre a la extracción del cuerpo
+    const { name, document, employeeNumber, celular, seguroMedico, tipoSangre, lugarTrabajo, telefonoEmpresa } = req.body;
     
-    const query = 'INSERT INTO employees (name, document, employeeNumber, celular, lugarTrabajo, telefonoEmpresa) VALUES (?, ?, ?, ?, ?, ?)';
-    db.query(query, [name, document, employeeNumber, celular, lugarTrabajo, telefonoEmpresa], (err, result) => {
+    const query = 'INSERT INTO employees (name, document, employeeNumber, celular, seguroMedico, tipoSangre, lugarTrabajo, telefonoEmpresa) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+    
+    db.query(query, [name, document, employeeNumber, celular, seguroMedico, tipoSangre, lugarTrabajo, telefonoEmpresa], (err, result) => {
         if (err) return res.status(500).json({ error: err.message });
         res.json({ message: 'Empleado guardado con éxito', id: result.insertId });
     });
 });
 
-// 2. Ruta para EDITAR Empleado (PUT)
+// 2. Ruta para EDITAR Empleado (PUT) - ¡CORREGIDA!
 app.put('/api/employees/:id', verificarToken, (req, res) => {
     const { id } = req.params;
-    const { name, document, employeeNumber, celular, lugarTrabajo, telefonoEmpresa } = req.body;
+    // Añadidos seguroMedico y tipoSangre a la extracción del cuerpo
+    const { name, document, employeeNumber, celular, seguroMedico, tipoSangre, lugarTrabajo, telefonoEmpresa } = req.body;
 
-    const query = 'UPDATE employees SET name=?, document=?, employeeNumber=?, celular=?, lugarTrabajo=?, telefonoEmpresa=? WHERE id=?';
-    db.query(query, [name, document, employeeNumber, celular, lugarTrabajo, telefonoEmpresa, id], (err, result) => {
+    const query = 'UPDATE employees SET name=?, document=?, employeeNumber=?, celular=?, seguroMedico=?, tipoSangre=?, lugarTrabajo=?, telefonoEmpresa=? WHERE id=?';
+    
+    db.query(query, [name, document, employeeNumber, celular, seguroMedico, tipoSangre, lugarTrabajo, telefonoEmpresa, id], (err, result) => {
         if (err) return res.status(500).json({ error: err.message });
         res.json({ message: 'Empleado actualizado con éxito' });
     });
 });
 
-// 3. Ruta para LEER todos los empleados (GET) - Tu función loadEmployees() la va a necesitar
+// 3. Ruta para LEER todos los empleados (GET)
 app.get('/api/employees', verificarToken, (req, res) => {
     db.query('SELECT * FROM employees', (err, results) => {
         if (err) return res.status(500).json({ error: err.message });
@@ -165,25 +172,25 @@ app.get('/api/employees', verificarToken, (req, res) => {
     });
 });
 
-// Ruta PÚBLICA exacta para el visor integrado de tu index.html (Sin verificarToken)
+// Ruta PÚBLICA exacta para el visor integrado
 app.get('/api/share/employee/:id', (req, res) => {
     const { id } = req.params;
     
-    // Usamos los mismos nombres de columna que tu base de datos y tu frontend manejan
     db.query('SELECT * FROM employees WHERE id = ?', [id], (err, results) => {
         if (err) return res.status(500).json({ error: err.message });
         if (results.length === 0) return res.status(404).json({ error: 'Empleado no encontrado' });
         
-        // Mapeamos los campos para asegurarnos de que el frontend reciba lo que espera
         const emp = results[0];
         res.json({
             id: emp.id,
             name: emp.name,
             document: emp.document,
-            employee_number: emp.employeeNumber || emp.employee_number,
+            employee_number: emp.employeeNumber,
             celular: emp.celular || 'No registrado',
-            lugar_trabajo: emp.lugarTrabajo || emp.lugar_trabajo || 'No registrado',
-            telefono_empresa: emp.telefonoEmpresa || emp.telefono_empresa || 'No registrado'
+            seguro_medico: emp.seguroMedico || 'No registrado',
+            tipo_sangre: emp.tipoSangre || 'No registrado',
+            lugar_trabajo: emp.lugarTrabajo || 'No registrado',
+            telefono_empresa: emp.telefonoEmpresa || 'No registrado'
         });
     });
 });
@@ -199,9 +206,7 @@ app.post('/api/employees/delete-multiple', verificarToken, (req, res) => {
     });
 });
 
-// Busca tu app.listen y cámbiala para que se vea exactamente así:
 const PORT = process.env.PORT || 3000;
-
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`🚀 Servidor global corriendo en el puerto ${PORT}`);
 });

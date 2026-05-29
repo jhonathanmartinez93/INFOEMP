@@ -61,21 +61,38 @@ const crearTablasDeFormaAutomatica = () => {
         } else {
             console.log('✅ Tabla employees verificada/creada en Railway');
             
-            // =========================================================================
-            // INYECTAR LAS COLUMNAS FALTANTES SI LA TABLA YA EXISTÍA
-            // =========================================================================
-            const agregarSeguro = `ALTER TABLE employees ADD COLUMN IF NOT EXISTS seguroMedico VARCHAR(100);`;
-            const agregarSangre = `ALTER TABLE employees ADD COLUMN IF NOT EXISTS tipoSangre VARCHAR(20);`;
+           // =========================================================================
+// INYECTAR LAS COLUMNAS FALTANTES SI LA TABLA YA EXISTÍA (CORREGIDO)
+// =========================================================================
+const agregarSeguro = `ALTER TABLE employees ADD COLUMN seguroMedico VARCHAR(100);`;
+const agregarSangre = `ALTER TABLE employees ADD COLUMN tipoSangre VARCHAR(20);`;
 
-            db.query(agregarSeguro, (errAlter) => {
-                if (errAlter) console.error('⚠️ Nota al verificar columna seguroMedico:', errAlter.message);
-                else console.log('🔹 Columna seguroMedico verificada en la base de datos');
-            });
+db.query(agregarSeguro, (errAlter) => {
+    if (errAlter) {
+        // Código ER_DUP_FIELDNAME significa que la columna ya existía, así que lo ignoramos pacíficamente
+        if (errAlter.code === 'ER_DUP_FIELDNAME') {
+            console.log('🔹 Columna seguroMedico ya existe en la base de datos');
+        } else {
+            console.error('⚠️ Error al verificar columna seguroMedico:', errAlter.message);
+        }
+    } else {
+        console.log('✅ Columna seguroMedico creada con éxito en la base de datos');
+    }
+});
 
-            db.query(agregarSangre, (errAlter) => {
-                if (errAlter) console.error('⚠️ Nota al verificar columna tipoSangre:', errAlter.message);
-                else console.log('🔹 Columna tipoSangre verificada en la base de datos');
-            });
+db.query(agregarSangre, (errAlter) => {
+    if (errAlter) {
+        // Ignoramos si ya existe
+        if (errAlter.code === 'ER_DUP_FIELDNAME') {
+            console.log('🔹 Columna tipoSangre ya existe en la base de datos');
+        } else {
+            console.error('⚠️ Error al verificar columna tipoSangre:', errAlter.message);
+        }
+    } else {
+        console.log('✅ Columna tipoSangre creada con éxito en la base de datos');
+    }
+});
+// =========================================================================
             // =========================================================================
         }
     });
